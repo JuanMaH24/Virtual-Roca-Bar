@@ -1,0 +1,61 @@
+{% extends './home_template.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+<h1>Bienvenido, {{ current_user.name }} <a class="btn btn-secondary" href="{{ url_for('logout') }}">Logout</a></h1>
+
+<div class="row">
+    {% for d in data %}
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <img class="card-img-top" alt="Bootstrap Thumbnail First" src="https://i.ibb.co/sJqSg8Q/Svgjs-G1007.png">
+            <div class="card-block">
+                <h5 class="card-title">
+                    {{d.product_name}} 
+                </h5>
+                <h5 class="card-title">
+                    {{d.product_price}} 
+                </h5>
+                <h5 class="card-title">
+                    {{d.product_cant}} 
+                </h5>
+                <form class="d-flex" action="/addShopcar/{{d.product_id}}" method="POST">
+                  <button class="nav-item nav-link" type="submit">Agregar al carrito</button>
+                </form>
+                {% if current_user.rol == 0 %}
+                <button class="btn btn-primary btn-sm" id="btn-edit{{d.product_id}}" data-bs-toggle="modal" data-bs-target="#modal{{d.product_id}}">Edit</button>
+                <form class="d-flex" action="/deleteProduct/{{d.product_id}}" method="POST">
+                    <button class="nav-item nav-link" type="submit">Delete</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modal{{d.product_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">{{d.product_name}}</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/updateProduct/{{d.product_id}}" method="POST">
+                    <label>Nuevo nombre del Producto</label>
+                    <input type="text" class="form-control mb-3" name="product_name" value="{{d.product_name}}" required>
+                    <label>Nuevo precio del Producto</label>
+                    <input type="number" class="form-control mb-3" name="product_price" value="{{d.product_price}}" min="0" required>
+                    <label>Cantidad del Producto</label>
+                    <input type="number" class="form-control mb-3" name="product_cant" value="{{d.product_cant}}" min="0" required>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

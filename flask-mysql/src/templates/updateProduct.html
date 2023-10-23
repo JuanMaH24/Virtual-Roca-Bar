@@ -1,0 +1,26 @@
+{% extends './home_template.html' %}
+
+{% block title %}Add Product{% endblock %}
+
+{% block body %}
+<h1>Bienvenido, {{ current_user.name }}, estas en la sección para modificar PRODUCTOS <a class="btn btn-secondary" href="{{ url_for('logout') }}">Logout</a></h1>
+
+<div class="card-body">
+    <form action="/updateProduct1" method="POST">
+        <div class="row mb-3">
+            <div class="col">
+                <label>Nuevo nombre</label>
+                <input type="text" class="form-control mb-3" name="product_name" required>
+            </div>
+            <div class="col">
+                <label>Nuevo precio/label>
+                <input type="number" class="form-control mb-3" name="product_price" required>
+            </div>
+            <div class="col">
+                <button class="btn btn-primary mb-3 mt-4" type="submit">Save</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+{% endblock %}

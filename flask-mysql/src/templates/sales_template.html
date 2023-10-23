@@ -1,0 +1,101 @@
+{% extends './home_template.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+<h1>Bienvenido, {{ current_user.name }} <a class="btn btn-secondary" href="{{ url_for('logout') }}">Logout</a></h1>
+
+
+
+<div class="card shadow">
+    <div class="card-body">
+        <form action="/searchUserSale" method="POST">
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Nombre del usuario</label>
+                    <input type="text" class="form-control mb-3" name="user_name">
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary mb-3 mt-4" type="submit">Buscar</button>
+                </div>
+            </div>
+
+        </form>
+
+
+        <!-- Tabla -->
+
+        <table class="table table-bordered">
+            <h5>INFO DE LAS VENTAS</h5>
+            <thead>
+                <tr>
+                    <th scope="col">Id Venta</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Fecha</th>
+                    {% if current_user.rol == 0 %}
+                    <th scope="col">Editar</th>
+                    <th scope="col">Borrar</th>
+                    {% endif %}
+                </tr>
+            </thead>
+        
+        <tbody>
+            {% for d in data %}
+                <tr>
+                    <td>{{d.sale_id}}</td>
+                    <td>{{d.name}}</td>
+                    <td>{{d.lastname}}</td>
+                    <td>{{d.product_name}}</td>
+                    <td>{{d.product_cant}}</td>
+                    <td>{{d.sale_date}}</td>
+                    {% if current_user.rol == 0 %}
+                    <td><button class="btn btn-primary btn-sm" id="btn-edit{{d.supplier_id}}" data-bs-toggle="modal" data-bs-target="#modal{{d.supplier_id}}">Editar</button></td>
+                    <td><form class="d-flex" action="/deleteSupplier/{{d.supplier_id}}" method="POST">
+                        <button class="nav-item nav-link" type="submit">Borrar</button>
+                    </form></td>
+                    {% endif %}
+                </tr>
+
+                <!-- modal -->
+
+                <div class="modal fade" id="modal{{d.supplier_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">{{d.supplier_name}}</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/updateSupplier/{{d.supplier_id}}" method="POST">
+                                <label>Nuevo nombre</label>
+                                <input type="text" class="form-control mb-3" name="supplier_name" value="{{d.supplier_name}}">
+                                <label>Nuevo contacto</label>
+                                <input type="text" class="form-control mb-3" name="supplier_contact" value="{{d.supplier_contact}}">
+                                <label>Nuevo ámbito</label>
+                                <input type="text" class="form-control mb-3" name="supplier_tipe" value="{{d.supplier_tipe}}">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    </div>
+</div>
+
+{% endblock %}
