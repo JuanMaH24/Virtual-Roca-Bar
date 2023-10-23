@@ -279,6 +279,7 @@ def deleteshopCar(id):
     return redirect(url_for('routeshopCar'))
 
 @app.route('/makeShop', methods=['POST'])
+@login_required
 def makeShop():
     if request.method == 'POST':
         cursor = db.database.cursor()
@@ -315,6 +316,20 @@ def searchUserSale():
     name = request.form['user_name']
     cursor = db.database.cursor()
     cursor.execute(f"SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, ventas.product_cant, ventas.sale_date FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND usuarios.name LIKE '%{name}%' AND ventas.estado_borrado = 1")
+    myresult = cursor.fetchall()
+    #Convertir los datos a diccionario
+    insertObject = []
+    columnNames = [column[0] for column in cursor.description]
+    for record in myresult:
+        insertObject.append(dict(zip(columnNames, record)))
+    cursor.close()
+    return render_template('sales_template.html', data=insertObject)
+
+@app.route('/userSales/<string:id>')
+@login_required
+def routeUserSales(id):
+    cursor = db.database.cursor()
+    cursor.execute(f"SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, ventas.product_cant, ventas.sale_date FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND usuarios.user_id = {int(id)} AND ventas.estado_borrado = 1")
     myresult = cursor.fetchall()
     #Convertir los datos a diccionario
     insertObject = []

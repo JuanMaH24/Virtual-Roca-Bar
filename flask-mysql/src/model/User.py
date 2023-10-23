@@ -17,4 +17,4 @@ class User(UserMixin):
     def get_id(self):
            return (self.user_id)
     
-# print(str(generate_password_hash("juanmaherrera")))
+# print(str(generate_password_hash("elixir900")))
