@@ -32,13 +32,17 @@
                   <h1 class="modal-title fs-5" id="exampleModalLabel">{{current_user.user_name}}</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body aling-items-center">
                     {% if current_user.rol == 0 %}
                     <a class="nav-item nav-link" href="{{ url_for('routeaddProduct') }}"><b>Nuevo Proucto</b></a>
 					<a class="nav-item nav-link active" id="nav-item-active" href="{{ url_for('routeSuppliers') }}"><b>Proveedores</b></a>
+                    <a class="nav-item nav-link active" id="nav-item-active" href="{{ url_for('routeBuy') }}"><b>Compras</b></a>
                     <a class="nav-item nav-link" href="{{ url_for('routeSales') }}"><b>Historial Ventas</b></a>
                     {% endif %}
                     <a class="nav-item nav-link" href="{{ url_for('routeUserSales', id = current_user.user_id) }}"><b>Mi historial</b></a>
+                    {% if current_user.rol == 0 %}
+                    <a class="nav-item nav-link" href="{{ url_for('usersLog') }}"><b>Usuarios</b></a>
+                    {% endif %}
                     <a class="btn btn-secondary" href="{{ url_for('logout') }}">Logout</a>
               </div>
             </div>

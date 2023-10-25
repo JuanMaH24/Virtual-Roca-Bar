@@ -1,0 +1,52 @@
+{% extends './home_template.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+<h1>Bienvenido, {{ current_user.name }}</h1>
+
+
+<div class="card shadow">
+    <div class="card-body">
+
+        <a class="nav-item nav-link" href="{{ url_for('routeaddUser') }}"><b>Nuevo Usuarios</b></a>
+
+
+        <!-- Tabla -->
+
+        <table class="table table-bordered">
+            <h5>INFO DE LOS USUARIOS</h5>
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Fecha Creación</th>
+                    <th scope="col">Borrar</th>
+                </tr>
+            </thead>
+        
+        <tbody>
+            {% for d in data %}
+                <tr>
+                    <td>{{d.user_id}}</td>
+                    <td>{{d.user_name}}</td>
+                    <td>{{d.name}}</td>
+                    <td>{{d.lastname}}</td>
+                    <td>{{d.date_create}}</td>
+                    <td><form class="d-flex" action="/deleteUser/{{d.user_id}}" method="POST">
+                        <button class="nav-item nav-link" type="submit">Borrar</button>
+                    </form></td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    </div>
+</div>
+
+{% endblock %}

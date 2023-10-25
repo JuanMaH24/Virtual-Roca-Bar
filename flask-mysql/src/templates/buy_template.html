@@ -1,0 +1,108 @@
+{% extends './home_template.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+<h1>Bienvenido, {{ current_user.name }}</h1>
+
+
+<div class="card shadow">
+    <div class="card-body">
+        <form action="/addBuy" method="POST">
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Producto</label>
+                    <select class="form-select" aria-label="Default select example" id="product_id" name="product_id">
+                        {% for p in product %}
+                        <option value="{{p.product_id}}">{{p.product_name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Proveedor</label>
+                    <select class="form-select" aria-label="Default select example" id="supplier_id" name="supplier_id">
+                        {% for supplier in suppliers %}
+                        <option value="{{supplier.supplier_id}}">{{supplier.supplier_name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Cantidad</label>
+                    <input type="number" class="form-control mb-3" min = "0" name="product_cant">
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary mb-3 mt-4" type="submit">Añadir</button>
+                </div>
+            </div>
+
+        </form>
+
+
+        <!-- Tabla -->
+
+        <table class="table table-bordered">
+            <h5>INFO DEL PROVEEDOR</h5>
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Proveedor</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Editar</th>
+                    <th scope="col">Borrar</th>
+                </tr>
+            </thead>
+        
+        <tbody>
+            {% for d in data %}
+                <tr>
+                    <td>{{d.buy_id}}</td>
+                    <td>{{d.product_name}}</td>
+                    <td>{{d.supplier_name}}</td>
+                    <td>{{d.product_cant}}</td>
+                    <td><button class="btn btn-primary btn-sm" id="btn-edit{{d.supplier_id}}" data-bs-toggle="modal" data-bs-target="#modal{{d.supplier_id}}">Editar</button></td>
+                    <td><form class="d-flex" action="/deleteSupplier/{{d.supplier_id}}" method="POST">
+                        <button class="nav-item nav-link" type="submit">Borrar</button>
+                    </form></td>
+                </tr>
+
+                <!-- modal -->
+
+                <div class="modal fade" id="modal{{d.supplier_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">{{d.supplier_name}}</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/updateSupplier/{{d.supplier_id}}" method="POST">
+                                <label>Nuevo nombre</label>
+                                <input type="text" class="form-control mb-3" name="supplier_name" value="{{d.supplier_name}}">
+                                <label>Nuevo contacto</label>
+                                <input type="text" class="form-control mb-3" name="supplier_contact" value="{{d.supplier_contact}}">
+                                <label>Nuevo ámbito</label>
+                                <input type="text" class="form-control mb-3" name="supplier_tipe" value="{{d.supplier_tipe}}">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+
+    </div>
+</div>
+
+{% endblock %}
