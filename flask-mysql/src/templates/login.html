@@ -13,7 +13,8 @@
             <div class="col-md-4"></div>
             <div class="col-md-4">
                 <form action="/login" method="POST" class="mb-3 p-2 form-signin">
-                    <img src="https://i.ibb.co/sJqSg8Q/Svgjs-G1007.png">
+                    <!-- <img src=" C:\Users\JUAN HERRERA\Desktop\UTP\6th Semester\Bases de Datos\Proyecto VirutalRocaBar\flask-mysql\src\assets\img\Logo_Bar_Roca.png"> -->
+                    <img src="{{ url_for('static', filename='img/Logo_Bar_Roca.png') }}">
                     <h1 class="h3 mb-3 fw-normal"><b>Virtual Roca Bar</b></h1>
                 
                     <div class="form-floating p-2">

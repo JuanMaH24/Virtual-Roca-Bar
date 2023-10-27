@@ -11,7 +11,7 @@
     <div class="card-body shadow-sm ">
         <div class="row align-items-center">
         <div class="col-md-4">
-            <img src="https://i.ibb.co/sJqSg8Q/Svgjs-G1007.png">
+            <img src="{{ url_for('static', filename='img/Logo_Bar_Roca.png') }}">
         </div>
         <div class="col-md-8">
             <a href="{{url_for('deleteshopCar', id=d.shopcar_id)}}"><button class="btn btn-danger" id="btn-delete{{d.shopcar_id}}" data-toggle="modal" data-target="#modal{{d.shopcar_id}}">X</button></a>
