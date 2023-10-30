@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 </head>
-<body>
-    <div class="container-fluid">
+<body class="bg-gradient" id="login">
+    <div class="mt-5 align-self-middle container-fluid">
         <div class="row text-center">
             <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <form action="/login" method="POST" class="mb-3 p-2 form-signin">
+            <div class="col-md-4 rounded bg-light shadow-lg">
+                <form action="/login" method="POST" class="mb-3 p-3 form-signin">
                     <!-- <img src=" C:\Users\JUAN HERRERA\Desktop\UTP\6th Semester\Bases de Datos\Proyecto VirutalRocaBar\flask-mysql\src\assets\img\Logo_Bar_Roca.png"> -->
                     <img src="{{ url_for('static', filename='img/Logo_Bar_Roca.png') }}">
                     <h1 class="h3 mb-3 fw-normal"><b>Virtual Roca Bar</b></h1>
@@ -25,7 +26,7 @@
                       <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                       <label for="floatingPassword">Contraseña</label>
                     </div>
-                    <button class="w-100 btn btn-lg btn-primary" type="submit">Iniciar Sesión</button>
+                    <button class="w-100 btn btn-lg btn-secondary" type="submit">Iniciar Sesión</button>
                   </form>
             </div>
             <div class="col-md-4"></div>

@@ -7,10 +7,10 @@
 <div class="row">
     <div class="card shadow-p col-md-8 text-center">
     {% for d in data %}
-    <div class="card-body shadow-sm ">
+    <div class="card-body shadow-sm">
         <div class="row align-items-center">
         <div class="col-md-4">
-            <img src="{{ url_for('static', filename='img/Logo_Bar_Roca.png') }}">
+            <img height="100%" width="100%" src="{{ url_for('static', filename=d.img_ref) }}">
         </div>
         <div class="col-md-8">
             <a href="{{url_for('deleteshopCar', id=d.shopcar_id)}}"><button class="btn btn-danger" id="btn-delete{{d.shopcar_id}}" data-toggle="modal" data-target="#modal{{d.shopcar_id}}">X</button></a>
@@ -18,13 +18,13 @@
                 {{d.product_name}} 
             </h5>
             <h5 class="card-text">
-                {{d.product_price}} COP
+                <b><i>{{d.product_price}} COP</i></b>
             </h5>
             <div>
-                <form class="d-flex" action="/updshopCar/{{d.product_id}}" method="POST">
+                <form class="mt-3 justify-content-between" action="/updshopCar/{{d.product_id}}" method="POST">
                     <label>Cantidad</label>
                     <input type="number" class="form-control mb-3" name="product_cant" min = "1" max="{{d.inventory}}" value="{{d.product_cant}}" required>
-                    <button class="nav-item nav-link" type="submit">Modificar cantidad</button>
+                    <button class="btn btn-secondary" type="submit">Modificar cantidad</button>
                 </form>
             </div>
         </div>
@@ -34,15 +34,15 @@
     </div>
     <div class="col-md-4 justify-content-center">
         <div class="card shadow-none">
-            <div class="card-title text-center"><b>TOTAL DEL CARRITO</b></div>
+            <div class="card-title text-center mt-3"><b>TOTAL DEL CARRITO</b></div>
             {% for d in data %}
-                <div class="p-2 card-text">{{d.product_name}}:   <b><i>{{d.totalshop}}</i></b></div>
+                <div class="p-2 card-text">{{d.product_name}}:   <b><i>{{d.totalshop}} COP</i></b></div>
             {% endfor %}
             <div class="p-2 card-text"></i></b></div>
-            <div class="p-2 card-text">TOTAL:   <b><i>{{total}}</i></b></div>
-            <div class="card-text">
+            <div class="p-2 card-text">TOTAL:   <b><i>{{total}} COP</i></b></div>
+            <div class="card-text m-3">
                 <form class="d-flex" action="/makeShop" method="POST">
-                    <button class="nav-item nav-link" type="submit">Realizar venta</button>
+                    <button class="btn btn-secondary" type="submit">Realizar venta</button>
                 </form>
             </div>
         </div>

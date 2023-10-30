@@ -281,7 +281,7 @@ def addShopcar(id):
 @login_required
 def routeshopCar():
     cursor = db.database.cursor()
-    cursor.execute("SELECT carrito.shopcar_id, carrito.user_id, carrito.product_id, carrito.product_cant,productos.product_name, productos.product_price, productos.product_cant AS inventory, (carrito.product_cant * productos.product_price) as totalshop FROM carrito INNER JOIN productos ON carrito.product_id=productos.product_id WHERE estado_borrado = 1")
+    cursor.execute("SELECT carrito.shopcar_id, carrito.user_id, carrito.product_id, carrito.product_cant,productos.product_name, productos.product_price, productos.product_cant AS inventory, (carrito.product_cant * productos.product_price) as totalshop, imagenes.img_ref FROM carrito, productos, imagenes WHERE imagenes.id = productos.product_id AND carrito.product_id=productos.product_id AND estado_borrado = 1")
     myresult = cursor.fetchall()
     #Convertir los datos a diccionario
     insertObject = []

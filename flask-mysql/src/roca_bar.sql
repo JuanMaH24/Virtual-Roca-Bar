@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 25-10-2023 a las 12:56:05
+-- Tiempo de generación: 30-10-2023 a las 18:20:37
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 8.0.26
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `carrito` (
   PRIMARY KEY (`shopcar_id`),
   UNIQUE KEY `user_id` (`user_id`,`product_id`),
   KEY `FK_shopcar_product_id` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `compras` (
   PRIMARY KEY (`buy_id`),
   KEY `FK_buy_supplier_id` (`supplier_id`),
   KEY `FK_buy_product_id` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `compras`
@@ -62,7 +62,34 @@ CREATE TABLE IF NOT EXISTS `compras` (
 
 INSERT INTO `compras` (`buy_id`, `product_id`, `supplier_id`, `product_cant`, `estado_borrado`) VALUES
 (1, 4, 4, 6, 1),
-(2, 7, 4, 5, 1);
+(2, 7, 4, 5, 1),
+(3, 5, 5, 10, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `imagenes`
+--
+
+DROP TABLE IF EXISTS `imagenes`;
+CREATE TABLE IF NOT EXISTS `imagenes` (
+  `id` int NOT NULL,
+  `img_ref` varchar(120) COLLATE latin1_spanish_ci NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `imagenes`
+--
+
+INSERT INTO `imagenes` (`id`, `img_ref`) VALUES
+(1, ''),
+(3, 'img/ron_marca_blanca.jpg'),
+(4, 'img/aguardiente_marca_blanca.jpg'),
+(5, 'img/cerveza_marca_blanca.jpg'),
+(6, 'img/vino_marca_blanca.jpg'),
+(7, 'img/mojito.jpeg'),
+(8, 'img/brandy_marca_blanca.jpeg');
 
 -- --------------------------------------------------------
 
@@ -78,7 +105,7 @@ CREATE TABLE IF NOT EXISTS `productos` (
   `product_cant` int UNSIGNED NOT NULL DEFAULT '0',
   `estado_borrado` int DEFAULT '1',
   PRIMARY KEY (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
@@ -88,9 +115,10 @@ INSERT INTO `productos` (`product_id`, `product_name`, `product_price`, `product
 (1, '', 0, 0, 0),
 (3, 'RON MARCA BLANCA 125ML', 31500, 35, 1),
 (4, 'AGUARDIENTE MARCA BLANCA 500ML', 47000, 18, 1),
-(5, 'CERVEZA DE MARCA BLANCA', 5500, 33, 1),
+(5, 'CERVEZA DE MARCA BLANCA', 5500, 38, 1),
 (6, 'VINO MARCA BLANCA', 25000, 12, 1),
-(7, 'MOJITO TRADICIONAL', 25000, 5, 1);
+(7, 'MOJITO TRADICIONAL', 25000, 5, 1),
+(8, 'Brandy 125ML', 25000, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -106,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `proveedores` (
   `supplier_tipe` varchar(100) CHARACTER SET latin1 COLLATE latin1_spanish_ci DEFAULT NULL,
   `estado_borrado` int DEFAULT '1',
   PRIMARY KEY (`supplier_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `proveedores`
@@ -114,7 +142,8 @@ CREATE TABLE IF NOT EXISTS `proveedores` (
 
 INSERT INTO `proveedores` (`supplier_id`, `supplier_name`, `supplier_contact`, `supplier_tipe`, `estado_borrado`) VALUES
 (1, 'BABARIA', 'BABARIA@BABARIA.COM', 'CERVEZAS', 0),
-(4, 'DistriLicores', 'distri@gmail.com', 'TODO LICOR', 1);
+(4, 'DistriLicores', 'distri@gmail.com', 'TODO LICOR', 1),
+(5, 'BABARIA', 'BABARIA@BABARIA.COM', 'CERVEZAS', 1);
 
 -- --------------------------------------------------------
 
@@ -154,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `date_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_name` (`user_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
@@ -187,7 +216,8 @@ CREATE TABLE IF NOT EXISTS `usuarios_eliminados` (
 
 INSERT INTO `usuarios_eliminados` (`user_id`, `name`, `lastname`, `user_name`, `password`, `rol`, `date_delete`) VALUES
 (8, 'Cristian Andrés', 'Osorio Zuluaga', 'ZuluCristian', 'pbkdf2:sha256:260000$mZ13fUZwLoqSAXr1$da2636afc22bb33259eeb258a557ac63882b6a1c05976527aec8df8977d64e38', 0, '2023-10-24 05:05:32'),
-(9, 'Cristian Andrés', 'Osorio Zuluaga', 'ZuluCristian3', 'pbkdf2:sha256:260000$D7Vjsq3nZLmUxbON$d736f4a85c139b24671f23b9fdfe7a27546df99f74cf1a1d765d68173b462ca9', 0, '2023-10-24 05:34:09');
+(9, 'Cristian Andrés', 'Osorio Zuluaga', 'ZuluCristian3', 'pbkdf2:sha256:260000$D7Vjsq3nZLmUxbON$d736f4a85c139b24671f23b9fdfe7a27546df99f74cf1a1d765d68173b462ca9', 0, '2023-10-24 05:34:09'),
+(10, 'Carlos ', 'Ocampo', 'Kaoz', 'pbkdf2:sha256:260000$4b5OkIWgMlzqrP9B$af0b4db42e762bd8a05b8173f8d506ffebf6b57d123669ae0978910a4f2f7efc', 0, '2023-10-25 14:31:56');
 
 -- --------------------------------------------------------
 
@@ -206,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   PRIMARY KEY (`sale_id`),
   KEY `FK_sales_user_id` (`user_id`),
   KEY `FK_sales_product_id` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `ventas`
@@ -220,7 +250,8 @@ INSERT INTO `ventas` (`sale_id`, `user_id`, `product_id`, `product_cant`, `sale_
 (15, 7, 7, 1, '2023-10-23 16:19:59', 1),
 (16, 7, 5, 1, '2023-10-23 16:19:59', 1),
 (17, 6, 3, 5, '2023-10-24 23:07:23', 1),
-(18, 6, 4, 2, '2023-10-24 23:07:23', 1);
+(18, 6, 4, 2, '2023-10-24 23:07:23', 1),
+(19, 7, 5, 5, '2023-10-25 14:23:41', 1);
 
 --
 -- Restricciones para tablas volcadas
@@ -239,6 +270,12 @@ ALTER TABLE `carrito`
 ALTER TABLE `compras`
   ADD CONSTRAINT `compras_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `proveedores` (`supplier_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `compras_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `productos` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `imagenes`
+--
+ALTER TABLE `imagenes`
+  ADD CONSTRAINT `imagenes_ibfk_1` FOREIGN KEY (`id`) REFERENCES `productos` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `ventas`

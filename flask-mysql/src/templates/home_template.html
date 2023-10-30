@@ -40,22 +40,24 @@
                 </div>
                 <div class="modal-body aling-items-center">
                     {% if current_user.rol == 0 %}
-                    <a class="nav-item nav-link" href="{{ url_for('routeaddProduct') }}"><b>Nuevo Proucto</b></a>
-					<a class="nav-item nav-link active" id="nav-item-active" href="{{ url_for('routeSuppliers') }}"><b>Proveedores</b></a>
-                    <a class="nav-item nav-link active" id="nav-item-active" href="{{ url_for('routeBuy') }}"><b>Compras</b></a>
-                    <a class="nav-item nav-link" href="{{ url_for('routeSales') }}"><b>Historial Ventas</b></a>
+                    <a class="nav-item nav-link text-secondary " href="{{ url_for('routeaddProduct') }}"><b>Nuevo Producto</b></a>
+					<a class="nav-item nav-link text-secondary" id="nav-item-active" href="{{ url_for('routeSuppliers') }}"><b>Proveedores</b></a>
+                    <a class="nav-item nav-link text-secondary" id="nav-item-active" href="{{ url_for('routeBuy') }}"><b>Compras</b></a>
+                    <a class="nav-item nav-link text-secondary" href="{{ url_for('routeSales') }}"><b>Historial Ventas</b></a>
                     {% endif %}
-                    <a class="nav-item nav-link" href="{{ url_for('routeUserSales', id = current_user.user_id) }}"><b>Mi historial</b></a>
+                    <a class="nav-item nav-link text-secondary" href="{{ url_for('routeUserSales', id = current_user.user_id) }}"><b>Mi historial</b></a>
                     {% if current_user.rol == 0 %}
-                    <a class="nav-item nav-link" href="{{ url_for('usersLog') }}"><b>Usuarios</b></a>
+                    <a class="nav-item nav-link text-secondary" href="{{ url_for('usersLog') }}"><b>Usuarios</b></a>
                     {% endif %}
-                    <a class="btn btn-secondary" href="{{ url_for('logout') }}">Logout</a>
+                    <div class="d-flex justify-content-end">
+                        <a class="btn btn-secondary " href="{{ url_for('logout') }}">Logout</a>
+                    </div>
               </div>
             </div>
           </div>
         </div>
     </div>
-        <h1 class= "p-3" id="message_user_name_log">Bienvenido, {{ current_user.name }}</h1>
+        <h1 class= "p-3 shadow" id="message_user_name_log">Bienvenido, {{ current_user.name }}</h1>
         {% block body %}
         {% endblock %}
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>

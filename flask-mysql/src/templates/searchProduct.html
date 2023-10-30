@@ -7,27 +7,29 @@
 <div class="row">
     {% for d in data %}
     <div class="col-md-3">
-        <div class="card shadow-sm m-3">
+        <div class="card shadow m-3">
             <img class="card-img-top" alt="Bootstrap Thumbnail First" src="{{ url_for('static', filename=d.img_ref)}}">
             <div class="card-block">
-                <h5 class="card-title">
+                <h5 class="card-title mt-3 mx-3">
                     {{d.product_name}} 
                 </h5>
-                <h5 class="card-title">
-                    {{d.product_price}} 
+                <h5 class="card-title mx-3">
+                    Precio: <b><i>{{d.product_price}}</i> COPS</b>
                 </h5>
-                <h5 class="card-title">
-                    {{d.product_cant}} 
+                <h5 class="card-title mx-3">
+                    Existencias: {{d.product_cant}} 
                 </h5>
-                <form class="d-flex" action="/addShopcar/{{d.product_id}}" method="POST">
-                  <button class="nav-item nav-link" type="submit">Agregar al carrito</button>
-                </form>
-                {% if current_user.rol == 0 %}
-                <button class="btn btn-primary btn-sm" id="btn-edit{{d.product_id}}" data-bs-toggle="modal" data-bs-target="#modal{{d.product_id}}">Edit</button>
-                <form class="d-flex" action="/deleteProduct/{{d.product_id}}" method="POST">
-                    <button class="nav-item nav-link" type="submit">Delete</button>
-                </form>
-                {% endif %}
+                <div class="d-flex flex-row justify-content-between m-3">
+                  <form class="d-flex" action="/addShopcar/{{d.product_id}}" method="POST">
+                    <button id="agregar-carrito" class="btn btn-info btn-sm" type="submit">Agregar al carrito</button>
+                  </form>
+                  {% if current_user.rol == 0 %}
+                  <button class="btn btn-secondary btn-sm" id="btn-edit{{d.product_id}}" data-bs-toggle="modal" data-bs-target="#modal{{d.product_id}}">Editar</button>
+                  <form class="d-flex" action="/deleteProduct/{{d.product_id}}" method="POST">
+                      <button class="btn btn-danger btn-sm" type="submit">Borrar</button>
+                  </form>
+                  {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -50,7 +52,7 @@
                     <input type="number" class="form-control mb-3" name="product_cant" value="{{d.product_cant}}" required>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Save changes</button>
+              <button type="submit" class="btn btn-secondary">Guardar</button>
             </div>
             </form>
           </div>
