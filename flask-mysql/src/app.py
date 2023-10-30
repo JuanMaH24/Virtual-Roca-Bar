@@ -84,7 +84,7 @@ def logout():
 @login_required
 def home():
     cursor = db.database.cursor()
-    cursor.execute("SELECT product_id, product_name, product_price, product_cant FROM productos WHERE estado_borrado = 1")
+    cursor.execute("SELECT productos.product_id, productos.product_name, productos.product_price, productos.product_cant, imagenes.img_ref FROM productos, imagenes WHERE imagenes.id = productos.product_id AND productos.estado_borrado = 1")
     myresult = cursor.fetchall()
     #Convertir los datos a diccionario
     insertObject = []
@@ -133,7 +133,7 @@ def addProduct():
 def routesearchProduct():
     name = request.form['product_name']
     cursor = db.database.cursor()
-    cursor.execute(f"SELECT product_id, product_name, product_price, product_cant FROM productos WHERE product_name LIKE '%{name}%' AND estado_borrado = 1")
+    cursor.execute(f"SELECT productos.product_id, productos.product_name, productos.product_price, productos.product_cant, imagenes.img_ref FROM productos, imagenes WHERE imagenes.id = productos.product_id AND productos.product_name LIKE '%{name}%' AND productos.estado_borrado = 1")
     myresult = cursor.fetchall()
     #Convertir los datos a diccionario
     insertObject = []

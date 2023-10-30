@@ -3,13 +3,12 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-<h1>Bienvenido, {{ current_user.name }}</h1>
 
 <div class="row">
     {% for d in data %}
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <img class="card-img-top" alt="Bootstrap Thumbnail First" src="{{ url_for('static', filename='img/Logo_Bar_Roca.png') }}">
+    <div class="col-md-3">
+        <div class="card shadow-sm m-3">
+            <img class="card-img-top" alt="Bootstrap Thumbnail First" src="{{ url_for('static', filename=d.img_ref)}}">
             <div class="card-block">
                 <h5 class="card-title">
                     {{d.product_name}} 
