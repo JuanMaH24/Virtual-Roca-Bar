@@ -1,3 +1,7 @@
+body{
+    overflow-x: hidden;
+}
+
 #header_nav{
     background-color: #AAC7D8;
 }

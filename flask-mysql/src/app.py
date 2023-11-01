@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
 
 import database as db
 from model.User import User
@@ -10,9 +11,13 @@ from model.User import User
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir, 'src', 'templates')
 
-
 app = Flask(__name__, template_folder = template_dir)
 app.secret_key =  'B!1w8NAt1T^%kvhUI*S^'
+app.config['UPLOAD_FOLDER'] = 'static\img'
+
+uploads_dir = os.path.join(app.root_path, 'static\img')
+
+
 
 login_manager_app = LoginManager(app)
 
@@ -113,14 +118,24 @@ def addProduct():
             name = request.form['product_name']
             price = request.form['product_price']
             cant = request.form['product_cant']
-
-            if (name and price and cant) and (int(price) >= 0) and (int(cant) >= 0):
+            img = request.files['imagensubida']
+            if (name and price and cant and img) and (int(price) >= 0) and (int(cant) >= 0):
+                img.save(os.path.join(uploads_dir, secure_filename(img.filename)))
                 cursor = db.database.cursor()
                 sql = f"INSERT INTO productos (product_name, product_price, product_cant) VALUES ('{str(name)}', {int(price)}, {int(cant)})"
                 cursor.execute(sql)
                 db.database.commit()
+                cursor = db.database.cursor()
+                sql = f"SELECT MAX(product_id) FROM productos WHERE estado_borrado = 1;"
+                cursor.execute(sql)
+                row = cursor.fetchone()
+                cursor.close()
+                cursor = db.database.cursor()
+                sql = f"INSERT INTO imagenes (id, img_ref) VALUES ({int(row[0])},'{str('img/' + img.filename)}')"
+                cursor.execute(sql)
+                db.database.commit()
             else:
-                print("INGRESE CORRECTAMENTE LOS VALORES")
+                flash("INGRESE CORRECTAMENTE LOS VALORES")
             return redirect(url_for('routeaddProduct'))
         else:
             return redirect(url_for('home'))
@@ -158,7 +173,7 @@ def updateProduct(id):
                 cursor.execute(sql)
                 db.database.commit()
             else:
-                print("INGRESE CORRECTAMENTE LOS VALORES")
+                flash("INGRESE CORRECTAMENTE LOS VALORES")
             return redirect(url_for('home'))
         else:
             return redirect(url_for('home'))
@@ -211,7 +226,7 @@ def addSupplier():
                 cursor.execute(sql)
                 db.database.commit()
             else:
-                print("INGRESE CORRECTAMENTE LOS VALORES")
+                flash("INGRESE CORRECTAMENTE LOS VALORES")
             return redirect(url_for('routeSuppliers'))
         else:
             return redirect(url_for('routeSuppliers'))
@@ -235,7 +250,7 @@ def updateSupplier(id):
                 cursor.execute(sql)
                 db.database.commit()
             else:
-                print("INGRESE CORRECTAMENTE LOS VALORES")
+                flash("INGRESE CORRECTAMENTE LOS VALORES")
             return redirect(url_for('routeSuppliers'))
         else:
             return redirect(url_for('routeSuppliers')) 
@@ -272,7 +287,7 @@ def addShopcar(id):
             cursor.execute(sql)
             db.database.commit()
         else:
-            print("Cantidad No válida")
+            flash("Cantidad No válida")
     except:
         None   
     return redirect(url_for('home'))
@@ -308,7 +323,7 @@ def updateshopCar(id):
             cursor.execute(sql)
             db.database.commit()
         else:
-            print("INGRESE CORRECTAMENTE LOS VALORES")
+            flash("INGRESE CORRECTAMENTE LOS VALORES")
         return redirect(url_for('routeshopCar'))
     else:
         return redirect(url_for('routeshopCar'))
@@ -448,7 +463,7 @@ def addBuy():
                 cursor.execute(sql)
                 db.database.commit()
             else:
-                print("INGRESE CORRECTAMENTE LOS VALORES")
+                flash("INGRESE CORRECTAMENTE LOS VALORES")
             return redirect(url_for('routeBuy'))
         else:
             return redirect(url_for('routeBuy'))
@@ -507,11 +522,29 @@ def addUser():
             print(str(name))
             if (name and lastname and user_name and password and rol):
                 cursor = db.database.cursor()
-                sql = f"INSERT INTO usuarios (name, lastname, user_name, password, rol) VALUES ('{str(name)}', '{str(lastname)}', '{str(user_name)}', '{str(generate_password_hash(str(password)))}', {int(rol)})"
-                cursor.execute(sql)
-                db.database.commit()
+                cursor.execute("SELECT user_name FROM usuarios WHERE 1")
+                myresult = cursor.fetchall()
+                insertObject = []
+                columnNames = [column[0] for column in cursor.description]
+                for record in myresult:
+                    insertObject.append(dict(zip(columnNames, record)))
+                cursor.close()
+                all_user_name = []
+                try:
+                    for d in insertObject:
+                        all_user_name.append(d['user_name'])
+                except:
+                    None
+                if not(user_name in all_user_name):
+                    cursor = db.database.cursor()
+                    sql = f"INSERT INTO usuarios (name, lastname, user_name, password, rol) VALUES ('{str(name)}', '{str(lastname)}', '{str(user_name)}', '{str(generate_password_hash(str(password)))}', {int(rol)})"
+                    cursor.execute(sql)
+                    db.database.commit()
+                else:
+                    flash("ESE NOMBRE DE USUARIO YA EXISTE")
+                    return redirect(url_for('routeaddUser'))
             else:
-                print("INGRESE CORRECTAMENTE LOS VALORES")
+                flash("INGRESE CORRECTAMENTE LOS VALORES")
             return redirect(url_for('usersLog'))
         else:
             return redirect(url_for('usersLog'))
@@ -550,6 +583,32 @@ def deleteUser(id):
     else:
         flash("NO TIENES LOS PERMISOS PARA ESTO")
         return redirect(url_for('home'))
+
+
+@app.route('/routeupdateUser')
+@login_required
+def routeupdateUser():
+    return render_template('updateUser.html')
+
+@app.route('/updateUser', methods=['POST'])
+@login_required
+def updateUser():
+    if request.method == 'POST':
+        name = request.form['name']
+        lastname = request.form['lastname']
+        password = request.form['password']
+        if (name and lastname and password):
+            cursor = db.database.cursor()
+            sql = f"UPDATE usuarios SET name = '{str(name)}', lastname = '{str(lastname)}', password = '{str(generate_password_hash(str(password)))}' WHERE user_id = {current_user.user_id}"
+            cursor.execute(sql)
+            db.database.commit()
+        else:
+            flash("INGRESE CORRECTAMENTE LOS VALORES")
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('home'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=True,port=5000)

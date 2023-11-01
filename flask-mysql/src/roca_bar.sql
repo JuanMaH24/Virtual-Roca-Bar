@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 30-10-2023 a las 18:20:37
+-- Tiempo de generación: 01-11-2023 a las 01:59:41
 -- Versión del servidor: 8.0.31
 -- Versión de PHP: 8.0.26
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `carrito` (
   PRIMARY KEY (`shopcar_id`),
   UNIQUE KEY `user_id` (`user_id`,`product_id`),
   KEY `FK_shopcar_product_id` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 -- --------------------------------------------------------
 
@@ -89,7 +89,8 @@ INSERT INTO `imagenes` (`id`, `img_ref`) VALUES
 (5, 'img/cerveza_marca_blanca.jpg'),
 (6, 'img/vino_marca_blanca.jpg'),
 (7, 'img/mojito.jpeg'),
-(8, 'img/brandy_marca_blanca.jpeg');
+(8, 'img/brandy_marca_blanca.jpeg'),
+(9, 'img/whisky.jpeg');
 
 -- --------------------------------------------------------
 
@@ -105,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `productos` (
   `product_cant` int UNSIGNED NOT NULL DEFAULT '0',
   `estado_borrado` int DEFAULT '1',
   PRIMARY KEY (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
@@ -115,10 +116,11 @@ INSERT INTO `productos` (`product_id`, `product_name`, `product_price`, `product
 (1, '', 0, 0, 0),
 (3, 'RON MARCA BLANCA 125ML', 31500, 35, 1),
 (4, 'AGUARDIENTE MARCA BLANCA 500ML', 47000, 18, 1),
-(5, 'CERVEZA DE MARCA BLANCA', 5500, 38, 1),
+(5, 'CERVEZA DE MARCA BLANCA', 5500, 37, 1),
 (6, 'VINO MARCA BLANCA', 25000, 12, 1),
 (7, 'MOJITO TRADICIONAL', 25000, 5, 1),
-(8, 'Brandy 125ML', 25000, 5, 1);
+(8, 'Brandy 125ML', 25000, 5, 1),
+(9, 'WHISKY MARCA BLANCA', 125000, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -142,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `proveedores` (
 
 INSERT INTO `proveedores` (`supplier_id`, `supplier_name`, `supplier_contact`, `supplier_tipe`, `estado_borrado`) VALUES
 (1, 'BABARIA', 'BABARIA@BABARIA.COM', 'CERVEZAS', 0),
-(4, 'DistriLicores', 'distri@gmail.com', 'TODO LICOR', 1),
+(4, 'DistriLicor', 'distri@gmail.com', 'TODO LICOR', 1),
 (5, 'BABARIA', 'BABARIA@BABARIA.COM', 'CERVEZAS', 1);
 
 -- --------------------------------------------------------
@@ -183,15 +185,15 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `date_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_name` (`user_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
 INSERT INTO `usuarios` (`user_id`, `name`, `lastname`, `user_name`, `password`, `rol`, `date_create`) VALUES
-(6, 'Juan', 'Herrera', 'Jherrera5', 'pbkdf2:sha256:260000$Mvct0AU5ShC7aPNd$bd2ee2dcc42476903ab2095ccb435cfe3092a40e37f04f02c5c7ba5ebe3ffc62', 0, '2023-10-22 02:04:37'),
-(7, 'Jhonnier', 'Caminos', 'JonnhyBL', 'pbkdf2:sha256:260000$0DT9crtMyp0jGcVg$4f9d2914b32c9a742347e31a8e5452df120fbdd4c255116097783c57d4b21105', 1, '2023-10-23 16:15:00');
+(6, 'Juan Manuel', 'Herrera', 'Jherrera5', 'pbkdf2:sha256:260000$vNlKmksPAWE29lke$1f5538083572c12fccf3e170b02476c8c2677e4c4214db1e40e052c18cd24b87', 0, '2023-10-22 02:04:37'),
+(7, 'Jhonnier', 'Caminos', 'JonnhyBL', 'pbkdf2:sha256:260000$aWiV0CzbKPBqvbhv$68894ff7d177551ff642c87ab95a4f8324e6fa2566b6ac743fc29d733bb78d8d', 1, '2023-10-23 16:15:00');
 
 -- --------------------------------------------------------
 
@@ -236,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `ventas` (
   PRIMARY KEY (`sale_id`),
   KEY `FK_sales_user_id` (`user_id`),
   KEY `FK_sales_product_id` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `ventas`
@@ -251,7 +253,8 @@ INSERT INTO `ventas` (`sale_id`, `user_id`, `product_id`, `product_cant`, `sale_
 (16, 7, 5, 1, '2023-10-23 16:19:59', 1),
 (17, 6, 3, 5, '2023-10-24 23:07:23', 1),
 (18, 6, 4, 2, '2023-10-24 23:07:23', 1),
-(19, 7, 5, 5, '2023-10-25 14:23:41', 1);
+(19, 7, 5, 5, '2023-10-25 14:23:41', 1),
+(20, 7, 5, 1, '2023-10-31 19:50:28', 1);
 
 --
 -- Restricciones para tablas volcadas

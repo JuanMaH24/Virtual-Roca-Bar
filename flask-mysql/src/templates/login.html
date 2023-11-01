@@ -16,6 +16,19 @@
                 <form action="/login" method="POST" class="mb-3 p-3 form-signin">
                     <!-- <img src=" C:\Users\JUAN HERRERA\Desktop\UTP\6th Semester\Bases de Datos\Proyecto VirutalRocaBar\flask-mysql\src\assets\img\Logo_Bar_Roca.png"> -->
                     <img src="{{ url_for('static', filename='img/Logo_Bar_Roca.png') }}">
+                    {% with messages = get_flashed_messages() %}
+
+                    {% if messages %}
+                    <br />
+                    {% for message in messages %}
+                    <div class="alert alert-primary alert-dismissible" role="alert">
+                        <strong>{{ message }}</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% endwith %}
                     <h1 class="h3 mb-3 fw-normal"><b>Virtual Roca Bar</b></h1>
                 
                     <div class="form-floating p-2">

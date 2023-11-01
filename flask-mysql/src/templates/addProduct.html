@@ -7,7 +7,7 @@
 
 
 <div class="card-body mt-5 shadow-sm">
-    <form action="/addProduct1" method="POST">
+    <form action="/addProduct1" enctype="multipart/form-data" method="POST">
         <div class="row mb-3">
             <div class="col">
                 <label>Nombre del Producto</label>
@@ -20,6 +20,10 @@
             <div class="col">
                 <label>Cantidad del Producto</label>
                 <input type="number" class="form-control mb-3" name="product_cant" min="0" required>
+            </div>
+            <div class="col">
+                <label>Imagen</label>
+                <input type="file" name="imagensubida" accept="image/png, .jpeg, .jpg, image/gif" required  >
             </div>
             <div class="col">
                 <button class="btn btn-secondary mb-3 mt-4" type="submit">Crear Producto</button>
