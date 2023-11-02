@@ -1,0 +1,33 @@
+        Virtual Roca Bar
+---------------------------------
+
+
+Después de la sustentación se generaron cambios o mejoras acordados para el Microproyecto, aquí se definiran algunos de estos:
+
+    - Nuevas Funcionalidades:
+        *Se generó la funcionalidad de almacenar las imagenes de los productos mediante el almacenamiento
+        de la url donde se encuentra alojada la imagen. Si se quiere crear un nuevo producto en el formulario
+        se pide la imagen, esta se descarga en la carpeta "static/img" de este fichero y se crea automaticamente
+        la url en la base de datos para este nuevo producto.
+        
+        *Se generó el método para filtrar el registro de ventas y generar unos reportes básicos de productos vendidos.
+
+        *Se agregó la opción de editar el propio perfil, esto con la idea de poder actualizar contraseña de usuario
+
+    - Eliminación de funcionalidades:
+        *Se acordó eliminar las funcionalidades de editar y eliminar tanto para ventas como para compras del bar. Ya que 
+        estas afectan directamente a los usuarios, esto podría dar paso a alteraciones o algún tipo de inconvenientes para
+        los dueños y/o trabajadores del pequeño bar.
+    
+    - Mejoras de aspecto:
+        *Se agregaron estilos y se mejoró el aspecto de interacción con el usuario y la aplicación. Lo que corresponde 
+        al Front-end
+
+Mejoras para el futuro:
+La aplicación aunque está diseñada para un pequeño negocio se podrían generar mejoras que potencien las funcionalidades. 
+Estas posibles mejoras podrían ser:
+
+    -   Aumento en las posibilidades de análisis estadistico en base a las ventas. Como medidas de tendencia u otras medidas estadisticas.
+    -	Incluir un sistema de pagos en línea, para que usuarios del común puedan acceder a compras online en el sistema.
+    -  	Sistema de facturación, funcionalidad que podría facilitar tramites financieros del pequeño bar.
+

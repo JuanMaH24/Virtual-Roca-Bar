@@ -13,21 +13,55 @@
             <div class="row mb-3">
                 <div class="col">
                     <label>Nombre del usuario</label>
-                    <input type="text" class="form-control mb-3" name="user_name">
+                    <input type="text" class="form-control mb-3" value="{{form_values[0]}}" name="user_name">
                 </div>
                 <div class="col">
-                    <button class="btn btn-secondary mb-3 mt-4" type="submit">Buscar</button>
+                    <label>Desde</label>
+                    <input type="date" class="form-control mb-3" value="{{form_values[1]}}" name="date_start">
+                </div>
+                <div class="col">
+                    <label>Hasta</label>
+                    <input type="date" class="form-control mb-3" value="{{form_values[2]}}" name="date_end">
+                </div>
+                <div class="col">
+                    <label>Producto</label>
+                    <input type="text" class="form-control mb-3" value="{{form_values[3]}}" name="product_name">
+                </div>
+                <div class="col">
+                    <button class="btn btn-secondary mb-3 mt-4" type="submit">Filtrar</button>
                 </div>
             </div>
 
         </form>
         {% endif %}
 
-
         <!-- Tabla -->
-
+        <div class="row mt-4 mb-4">
+            <div class="col-md-2"></div>
+            <div class="card col-md-3 p-4 text-center border-radius shadow-lg">
+                <div class="mb-3 card-tittle">
+                    <b>PRODUCTOS MÁS VENDIDO DEL REPORTE</b>
+                </div>
+                <div class="card-text">
+                    {{stadistic1[0].product_name}}
+                </div>
+                <div class="card-text">
+                    {{stadistic1[0].sum_product}} Unidades
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="card col-md-3 p-4 text-center border-radius shadow-lg">
+                <div class="card-tittle mb-3">
+                    <b>PROMEDIO DE VENTAS TOTALES DIARIAS DEL REPORTE</b>
+                </div>
+                <div class="card-text">
+                    <h5><b><i>{{avg_sales[0].avg_sale}} COP</i></b></h5>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
         <table class="table table-bordered">
-            <h5>INFO DE LAS VENTAS</h5>
+            <h5>REPORTE DE LAS VENTAS</h5>
             <thead>
                 <tr>
                     <th scope="col">Id Venta</th>
@@ -35,6 +69,7 @@
                     <th scope="col">Apellido</th>
                     <th scope="col">Producto</th>
                     <th scope="col">Cantidad</th>
+                    <th scope="col">T. Valor</th>
                     <th scope="col">Fecha</th>
                 </tr>
             </thead>
@@ -47,6 +82,7 @@
                     <td>{{d.lastname}}</td>
                     <td>{{d.product_name}}</td>
                     <td>{{d.product_cant}}</td>
+                    <td>{{d.product_cant*d.product_price}}</td>
                     <td>{{d.sale_date}}</td>
                 </tr>
             {% endfor %}

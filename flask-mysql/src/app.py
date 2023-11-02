@@ -354,12 +354,28 @@ def makeShop():
         return redirect(url_for('home'))
 
 
+
+def avg_sale(sale_filter):
+    avg = 0
+    sql = f"SELECT AVG(sub_query.total_sales) AS avg_sale FROM (SELECT DATE(ventas.sale_date) AS fecha_venta, SUM(productos.product_price * ventas.product_cant) AS total_sales FROM productos, ventas, usuarios {sale_filter} GROUP BY DATE(ventas.sale_date)) AS sub_query WHERE 1;"
+    cursor = db.database.cursor()
+    cursor.execute(sql)
+    myresult = cursor.fetchall()
+    avg = []
+    columnNames = [column[0] for column in cursor.description]
+    for record in myresult:
+        avg.append(dict(zip(columnNames, record)))
+    cursor.close()
+    if len(avg) == 0:
+        avg = ['']
+    return avg
+
 @app.route('/sales')
 @login_required
 def routeSales():
     if current_user.rol == 0:
         cursor = db.database.cursor()
-        cursor.execute("SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, ventas.product_cant, ventas.sale_date FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND ventas.estado_borrado = 1")
+        cursor.execute("SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, productos.product_price, ventas.product_cant, ventas.sale_date FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND ventas.estado_borrado = 1")
         myresult = cursor.fetchall()
         #Convertir los datos a diccionario
         insertObject = []
@@ -367,7 +383,20 @@ def routeSales():
         for record in myresult:
             insertObject.append(dict(zip(columnNames, record)))
         cursor.close()
-        return render_template('sales_template.html', data=insertObject)
+
+        cursor = db.database.cursor()
+        cursor.execute("SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, productos.product_price, SUM(ventas.product_cant) AS sum_product, ventas.sale_date FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND ventas.estado_borrado = 1  GROUP BY product_name ORDER BY SUM(ventas.product_cant) DESC LIMIT 1;")
+        myresult = cursor.fetchall()
+        #Convertir los datos a diccionario
+        max_sale = []
+        columnNames = [column[0] for column in cursor.description]
+        for record in myresult:
+            max_sale.append(dict(zip(columnNames, record)))
+        cursor.close()
+        if len(max_sale) == 0:
+            max_sale = ['']
+        avg = avg_sale("WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND ventas.estado_borrado = 1")
+        return render_template('sales_template.html', data=insertObject, stadistic1 = max_sale, avg_sales = avg,form_values=['','','',''])
     else:
         flash("NO TIENES LOS PERMISOS PARA ESTO")
         return redirect(url_for('home'))
@@ -378,8 +407,15 @@ def routeSales():
 def searchUserSale():
     if current_user.rol == 0:
         name = request.form['user_name']
+        date_start = request.form['date_start']
+        date_end = request.form['date_end']
+        if not(date_start):
+            date_start = '0000-01-01'
+        if not(date_end):
+            date_end = '9999-01-01'
+        product_name = request.form['product_name']
         cursor = db.database.cursor()
-        cursor.execute(f"SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, ventas.product_cant, ventas.sale_date FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND usuarios.name LIKE '%{name}%' AND ventas.estado_borrado = 1")
+        cursor.execute(f"SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, productos.product_price, ventas.product_cant, ventas.sale_date FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND usuarios.name LIKE '%{name}%' AND ventas.estado_borrado = 1 AND ventas.sale_date >= '{date_start}' AND ventas.sale_date <= '{date_end}' AND productos.product_name LIKE '%{product_name}%';")
         myresult = cursor.fetchall()
         #Convertir los datos a diccionario
         insertObject = []
@@ -387,7 +423,22 @@ def searchUserSale():
         for record in myresult:
             insertObject.append(dict(zip(columnNames, record)))
         cursor.close()
-        return render_template('sales_template.html', data=insertObject)
+
+        cursor = db.database.cursor()
+        cursor.execute(f"SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, productos.product_price, SUM(ventas.product_cant) AS sum_product, ventas.sale_date FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND usuarios.name LIKE '%{name}%' AND ventas.estado_borrado = 1 AND ventas.sale_date >= '{date_start}' AND ventas.sale_date <= '{date_end}' AND productos.product_name LIKE '%{product_name}%'  GROUP BY product_name ORDER BY SUM(ventas.product_cant) DESC LIMIT 1;")
+        myresult = cursor.fetchall()
+        #Convertir los datos a diccionario
+        max_sale = []
+        columnNames = [column[0] for column in cursor.description]
+        for record in myresult:
+            max_sale.append(dict(zip(columnNames, record)))
+        cursor.close()
+        if len(max_sale) == 0:
+            max_sale = ['']
+        avg = avg_sale(f"WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND usuarios.name LIKE '%{name}%' AND ventas.estado_borrado = 1 AND ventas.sale_date >= '{date_start}' AND ventas.sale_date <= '{date_end}' AND productos.product_name LIKE '%{product_name}%'")
+        if date_end == '9999-01-01':
+            date_end = '0000-01-01'
+        return render_template('sales_template.html', data=insertObject, stadistic1 = max_sale, avg_sales = avg, form_values = [name, date_start, date_end, product_name])
     else:
         flash("NO TIENES LOS PERMISOS PARA ESTO")
         return redirect(url_for('home'))
@@ -397,7 +448,7 @@ def searchUserSale():
 def routeUserSales(id):
     if int(id) == int(current_user.user_id):
         cursor = db.database.cursor()
-        cursor.execute(f"SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, ventas.product_cant, ventas.sale_date FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND usuarios.user_id = {int(id)} AND ventas.estado_borrado = 1")
+        cursor.execute(f"SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, productos.product_price, ventas.product_cant, ventas.sale_date  FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND usuarios.user_id = {int(id)} AND ventas.estado_borrado = 1")
         myresult = cursor.fetchall()
         #Convertir los datos a diccionario
         insertObject = []
@@ -405,7 +456,21 @@ def routeUserSales(id):
         for record in myresult:
             insertObject.append(dict(zip(columnNames, record)))
         cursor.close()
-        return render_template('sales_template.html', data=insertObject)
+
+        cursor = db.database.cursor()
+        cursor.execute(f"SELECT ventas.sale_id, usuarios.name, usuarios.lastname, productos.product_name, productos.product_price, SUM(ventas.product_cant) AS sum_product, ventas.sale_date FROM ventas, usuarios, productos WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND usuarios.user_id = {int(id)} AND ventas.estado_borrado = 1 GROUP BY product_name ORDER BY SUM(ventas.product_cant) DESC LIMIT 1;")
+        myresult = cursor.fetchall()
+        #Convertir los datos a diccionario
+        max_sale = []
+        columnNames = [column[0] for column in cursor.description]
+        for record in myresult:
+            max_sale.append(dict(zip(columnNames, record)))
+        cursor.close()
+
+        if len(max_sale) == 0:
+            max_sale = ['']
+        avg = avg_sale(f"WHERE ventas.user_id = usuarios.user_id AND ventas.product_id = productos.product_id AND usuarios.user_id = {int(id)} AND ventas.estado_borrado = 1")
+        return render_template('sales_template.html', data=insertObject, stadistic1 = max_sale, avg_sales = avg, form_values=['','','',''])
     else:
         flash("NO TIENES LOS PERMISOS PARA ESTO")
         return redirect(url_for('home'))
